@@ -20,9 +20,9 @@ public class SummarizerService {
     private String apiKey;
 
     public SummaryResponse generateSummary(SummaryRequest request) throws Exception {
-        String apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + apiKey;
+        String apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=" + apiKey;
 
-        String prompt = "Format the following text as an " + request.getSummaryStyle() + " summary. Provide ONLY the summary with no introductory or concluding text:\n\n" + request.getDocumentText();
+        String prompt = "Format the following text as a strictly concise " + request.getSummaryStyle() + " summary. You must aggressively compress the information into a maximum of 3 sentences or bullet points. Provide ONLY the summary with no introductory or concluding text:\n\n" + request.getDocumentText();
 
         // Sanitize input to prevent JSON breakage
         String sanitizedText = prompt.replace("\"", "\\\"").replace("\n", "\\n");
@@ -37,6 +37,7 @@ public class SummarizerService {
 
         HttpClient client = HttpClient.newHttpClient();
         HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        System.out.println("GOOGLE API RESPONSE: " + response.body());
 
         String extractedSummary = extractTextFromJson(response.body());
 
